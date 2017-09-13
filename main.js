@@ -33,17 +33,14 @@ var imgArray = [
 		img: "Images/python-logo.png"
 	},
 ];
+
 //Taking initial array of card and doubling
 var allCards = $.merge(imgArray, imgArray);
 
 //Setting up the array for the pictures and score
 var memory_values = [];
 var memory_card_ids = [];
-var cards_flipped = 0;
-var memory_score = 0;
-var starRating = '<div><ul id="ratecv"><li id="star1" class="star"></li><li id="star2" class="star"></li><li id="star3" class="star"></li><li id="star4" class="star"></li><li id="star5" class="star"></li></ul></div>';		
-var general_timer = '<div>Time: <span class="clock">0:00</span></div>';
-
+	
 //Resetting game
 function reset(){
 	document.getElementById('main_board').innerHTML = "";
@@ -51,18 +48,31 @@ function reset(){
 	memory_card_ids = [];
 	stopTimer();
 	newGame();
-};
+}
 
-var timer;		
+//Rating system
+function rating(attempts){
+	$(document).ready(function(){
+		if(attempts <= 20){
+			$("#star1,#star2,#star3").addClass( "starred" );
+		}else if (attempts > 20 && attempts <= 30){
+			$("#star1,#star2").addClass( "starred" );										
+		}else if (attempts > 30){
+			$("#star1").addClass( "starred" );						
+		}
+	});
+}
+
+let timer;		
 function gameTimer(){
 	var startTime = new Date().getTime();
 
 	// Update the timer every second
 	timer = setInterval(function() {
 
-		var now = new Date().getTime();
+		let now = new Date().getTime();
 		// Find the time elapsed between now and start
-		var elapsed = now - startTime;
+		let elapsed = now - startTime;
 
 		// Calculate minutes and seconds
 		let minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
@@ -79,41 +89,19 @@ function gameTimer(){
 			$(".clock").text(currentTime);
 		});
 	}, 0);
-};
+}
 
-	
+
 function stopTimer(){
-    clearInterval(timer);
+	clearInterval(timer);
 	$(document).ready(function(){
 		$(".clock").text("0:00");
 	});
-};
-
-
-/**
-* @description Logic for ratings system
-* @param {number} attempts  
-*/
-function rating(attempts){
-	$(document).ready(function(){
-		if(attempts <= 20){
-			$("#star1,#star2,#star3,#star4,#star5").addClass( "starred" );
-		}else if (attempts > 20 && attempts <= 25){
-			$("#star1,#star2,#star3,#star4").addClass( "starred" );
-		}else if (attempts > 25 && attempts <= 30){
-			$("#star1,#star2,#star3").addClass( "starred" );
-		}else if (attempts > 30 && attempts <= 35){
-			$("#star1,#star2").addClass( "starred" );
-		}else{
-			$("#star1").addClass( "starred" );
-		}
-	});
-};
-
+}
 
 //Adding shuffle function to Array 
 Array.prototype.card_shuffle = function(){
-	var i = this.length, j, temp;
+	let i = this.length, j, temp;
 	while(--i > 0){
 		j = Math.floor(Math.random() * (i+1));
 		temp = this[j];
@@ -123,59 +111,64 @@ Array.prototype.card_shuffle = function(){
 };
 
 //Modal Logic to display or not display...
-function showModal(){
-	var overlay = $(".modal-overlay");
-	var modal = $(".modal");
+function showModal(){		
+	let overlay = $(".modal-overlay");
+	let modal = $(".modal");
 	overlay.show();
 	modal.fadeIn("slow");
-};
-function hideModal(){
-	var overlay = $(".modal-overlay");
-	var modal = $(".modal");
+}
+function hideModal(){	
+	let overlay = $(".modal-overlay");
+	let modal = $(".modal");
 	overlay.hide();
 	modal.hide();
-};
-
+}
+		
 //Keeping track of scores
+let memory_score = 0;
 function attempts(){
 	memory_score += 1;
-	rating(memory_score);
-	var win_attempts = '<div id="attempts">Number of attempts: '+memory_score+general_timer+starRating+'</div>';
-	var reset_button = '<div id="attempts">Number of attempts: '+memory_score+general_timer+starRating+'<div class="btn btn-default btn-sm btn btn-info btn-lg" onclick="reset()" style="margin-left: 20px;"> Reset </div></div>';		
-	num_id = document.getElementById('counter').innerHTML = reset_button;
-	num_id2 = document.getElementById('number_of_tries').innerHTML = win_attempts;
-};
+	let starRating = '<div><ul id="ratecv"><li id="star1" class="star"></li><li id="star2" class="star"></li><li id="star3" class="star"></li></li></ul></div>';			
+	let general_timer = '<div>Time: <span class="clock">0:00</span></div>';
+	let game_attempts = '<div id="attempts">Number of attempts: '+'<span class="score">0</span>'+general_timer+starRating+'<div class="btn btn-default btn-sm btn btn-info btn-lg" onclick="reset()" style="margin-left: 20px;"> Reset </div></div>';
+	let win_attempts = '<div id="attempts">Number of attempts: '+memory_score+general_timer+starRating+'</div>';
+	$(document).ready(function(){
+		$(".score").text(memory_score);
+		rating(memory_score);
+	});
+	document.getElementById('counter').innerHTML = game_attempts;
+	document.getElementById('number_of_tries').innerHTML = win_attempts;
+}
 
-/**
-* @description Generating a new board and looping through to dynamically add the inner divs and setting/resetting score
-* @param {number} card
-* @param {number} val
-*/
+//Generating a new board and looping through to dynamically add the inner divs and setting/resetting score
 function newGame(){
-	memory_score = 0;
-	cards_flipped = 0;
-	count = 0;
-	clearInterval(timer);
-	var card_output = '';
-	var header = '<div id="header_title">' + '<h1>Memory Game</h1>' + '</div>';
-	var num_attempts = '<div id="attempts">Number of attempts: '+memory_score+general_timer+starRating+'<div class="btn btn-default btn-sm btn btn-info btn-lg" onclick="reset()" style="margin-left: 20px;"> Reset </div></div>';
+	let memory_score = 0;
+	let cards_flipped = 0;
+	let count = 0;
+	let card_output = '';
+	let starRating = '<div><ul id="ratecv"><li id="star1" class="star"></li><li id="star2" class="star"></li><li id="star3" class="star"></li></li></ul></div>';			
+	let general_timer = '<div>Time: <span class="clock">0:00</span></div>';
+	let header = '<div id="header_title"><h1>Memory Game</h1></div>';
+	let num_attempts = '<div id="attempts">Number of attempts: '+'<span class="score">0</span>'+general_timer+starRating+'<div class="btn btn-default btn-sm btn btn-info btn-lg" onclick="reset()" style="margin-left: 20px;"> Reset </div></div>';
 	rating(memory_score);
 	allCards.card_shuffle();
 	hideModal();
-	//Inputting html into divs
+	//Inputting html into divs - Splitting to create rows for Bootstap fluid
 	for(var i = 0; i < allCards.length; i++){
-		card_output += '<div id="card_'+i+'" onclick="memoryFlipCard(this,\''+allCards[i].img+'\')"></div>';
+		if(i%4==0){
+			card_output += '</div><div class="row"><div id="card_'+i+'" onclick="memoryFlipCard(this,\''+allCards[i].img+'\')" class="col-xs-3"></div>';
+		}else{
+			card_output += '<div id="card_'+i+'" onclick="memoryFlipCard(this,\''+allCards[i].img+'\')" class="col-xs-3"></div>';
+		}
 	}
 	document.getElementById('header').innerHTML = header;
 	document.getElementById('counter').innerHTML = num_attempts;			
 	document.getElementById('main_board').innerHTML = card_output;
-};
+}
 
-/**
-* @description Logic for flipping the cards
-* @param {number} card
-* @param {number} val
-*/
+//Logic to flip the card
+let count = 0;
+let cards_flipped = 0;
 function memoryFlipCard(card,val){
 	count += 1;
 	if(count <= 1){
@@ -206,18 +199,18 @@ function memoryFlipCard(card,val){
 					var card_1 = document.getElementById(memory_card_ids[0]);
 					var card_2 = document.getElementById(memory_card_ids[1]);
 					card_1.style.background = 'url(images/codepen-logo.png) no-repeat';
-					card_1.style.backgroundSize = 'cover';
+					card_1.style.backgroundSize = '71px 71px';
 					card_1.innerHTML = "";
 					card_2.style.background = 'url(images/codepen-logo.png) no-repeat';
-					card_2.style.backgroundSize = 'cover';
+					card_2.style.backgroundSize = '71px 71px';							
 					card_2.innerHTML = "";
-					// Clear arrays calls attempts method
+					// Clear both arrays
 					memory_values = [];
 					memory_card_ids = [];
-					attempts();
+					attempts();							
 				}
 				setTimeout(flipCard, 500);
 			}
 		}
 	}
-};
+}

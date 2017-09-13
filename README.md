@@ -1,6 +1,5 @@
 # MemoryGame
 
-Updated 5 days ago
 CRITERIA MEETS SPECIFICATIONS Memory Game Logic
 
 The game randomly shuffles the cards. A user wins once all cards have successfully been matched.

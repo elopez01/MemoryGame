@@ -199,10 +199,10 @@ function memoryFlipCard(card,val){
 					var card_1 = document.getElementById(memory_card_ids[0]);
 					var card_2 = document.getElementById(memory_card_ids[1]);
 					card_1.style.background = 'url(images/codepen-logo.png) no-repeat';
-					card_1.style.backgroundSize = '71px 71px';
+					card_1.style.backgroundSize = '41px 41px';
 					card_1.innerHTML = "";
 					card_2.style.background = 'url(images/codepen-logo.png) no-repeat';
-					card_2.style.backgroundSize = '71px 71px';							
+					card_2.style.backgroundSize = '41px 41px';							
 					card_2.innerHTML = "";
 					// Clear both arrays
 					memory_values = [];

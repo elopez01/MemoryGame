@@ -192,7 +192,7 @@ function memoryFlipCard(card,val){
 				attempts();
 				// Winning the game
 				if(cards_flipped == allCards.length){
-					stopTimer();
+					clearInterval(timer);
 					showModal();
 				}
 			} else {
